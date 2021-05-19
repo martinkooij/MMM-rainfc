@@ -231,7 +231,7 @@ Module.register("MMM-rainfc",{
 					
 					//send backlight information around if necessary
 					if (!this.backlights_norain) {
-						this.sendNotification('SET_LCD_BACKLIGHTS', {command: -1}  ); // remove module backlighting
+						this.sendNotification('SET_LCD_BACKLIGHT', {command: -1}  ); // remove module backlighting
 						this.backlights_norain = true ;
 					};
 
@@ -252,7 +252,7 @@ Module.register("MMM-rainfc",{
 									 {r: 0, g: 0, b: 255},
 									 {r: 0, g: 0, b: 255},
 									]}};
-						this.sendNotification('SET_LCD_BACKLIGHTS', myObject);  // generate module backlighting
+						this.sendNotification('SET_LCD_BACKLIGHT', myObject);  // generate module backlighting
 						this.backlights_norain = false ;
 					};
 						
