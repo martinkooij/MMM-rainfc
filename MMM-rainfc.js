@@ -180,6 +180,8 @@ Module.register("MMM-rainfc",{
 			this.times.push( '#' );
 		}
 	},
+	
+	backlights_norain: true ;
 
 	/* socketNotificationReceive(notification)
 	 * used to get communication from the nodehelper
@@ -195,6 +197,7 @@ Module.register("MMM-rainfc",{
     		if (notification === "STARTED") {
 			Log.info(this.name + ": rain forecast configured");
 			spark.innerHTML = this.translate("STARTED");
+			this.backlights_norain = true ;
 		} else 
        		// error received from node_helper.js
        		if (notification === "ERROR") {
@@ -225,12 +228,35 @@ Module.register("MMM-rainfc",{
 					noRainText = this.translate("NORAIN") + ' ' 
 					   	+ this.times[this.times.length-1] ;
 					spark.innerHTML = noRainText;
-	
+					
+					//send backlight information around if necessary
+					if (!this.backlights_norain) {
+						this.sendNotification('SET_LCD_BACKLIGHTS', {command: -1}  ); // remove module backlighting
+						this.backlights_norain = true ;
+					};
+
 					// experimental: option to completly hide the module if no rain is expected
 					if (this.config.autohide) this.hide();
        	 			} else {
 					Log.info(this.name + ": rain expected");
 					spark.innerHTML = this.makeSVG(this.rains,this.times);
+					
+					//send backlight information around if necessary
+					if (this.backlights_norain) {
+						var myObject = 
+							{command: "RAIN", 
+							 params:{ pixels: 
+									[{r: 0, g: 0, b: 255},
+									 {r: 0, g: 0, b: 255},
+									 {r: 0, g: 0, b: 255},
+									 {r: 0, g: 0, b: 255},
+									 {r: 0, g: 0, b: 255},
+									]}};
+						this.sendNotification('SET_LCD_BACKLIGHTS', myObject);  // generate module backlighting
+						this.backlights_norain = false ;
+					};
+						
+					
 					// experimental: option to completly hide the module if no rain is expected:
 					// show it again  when an update comes in with rain
 					if (this.config.autohide) this.show();
