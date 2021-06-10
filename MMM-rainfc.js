@@ -253,11 +253,10 @@ Module.register("MMM-rainfc",{
 					
 					// experimental: option to completly hide the module if no rain is expected:
 					// show it again  when an update comes in with rain
-					if (this.config.autohide) this.show();
+					if (this.config.autohide) { this.show(); }
 				}
 			}
-       	 	}
-                this.updateDom();
+            this.updateDom();
     	},
 
 });
